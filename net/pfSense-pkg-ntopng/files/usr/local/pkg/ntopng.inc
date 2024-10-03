@@ -28,7 +28,7 @@ require_once("util.inc");
 require_once("certs.inc");
 
 
-const DATA_DIR = "/var/db/ntopng/";
+const DATA_DIR = "/var/db/pkg/ntopng/";
 const RC_FILE = "/usr/local/etc/rc.d/ntopng.sh";
 const CONF_FILE = "/usr/local/etc/ntopng.conf";
 const DB_FILE = DATA_DIR . "ntopng.rdb";

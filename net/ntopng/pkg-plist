@@ -1514,4 +1514,4 @@ share/man/man8/ntopng.8.gz
 %%DATADIR%%/scripts/templates/report/vs_result.json
 %%DATADIR%%/scripts/templates/widgets.json
 @dir %%DATADIR%%/httpdocs/dist
-@dir(%%NTOPNGUSER%%,%%NTOPNGGROUP%%,750) /var/db/ntopng
+@dir(%%NTOPNGUSER%%,%%NTOPNGGROUP%%,750) /var/db/pkg/ntopng

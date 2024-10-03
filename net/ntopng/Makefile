@@ -62,7 +62,7 @@ post-patch:
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/ntopng
-	${MKDIR} ${STAGEDIR}/var/db/ntopng
+	${MKDIR} ${STAGEDIR}/var/db/pkg/ntopng
 	${INSTALL_SCRIPT} ${WRKDIR}/ntopng-geoip2update.sh ${STAGEDIR}${PREFIX}/bin
 	${RM} ${STAGEDIR}${DATADIR}/httpdocs/misc/ntopng-utils-manage-updates \
 		${STAGEDIR}${DATADIR}/httpdocs/misc/ntopng-utils-manage-updates.in

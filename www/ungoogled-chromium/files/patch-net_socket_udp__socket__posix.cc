@@ -1,7 +1,7 @@
---- net/socket/udp_socket_posix.cc.orig	2024-07-31 14:19:23 UTC
+--- net/socket/udp_socket_posix.cc.orig	2025-01-25 09:34:31 UTC
 +++ net/socket/udp_socket_posix.cc
-@@ -521,12 +521,17 @@ int UDPSocketPosix::SetRecvTos() {
-     }
+@@ -522,12 +522,17 @@ int UDPSocketPosix::SetRecvTos() {
+ #endif  // BUILDFLAG(IS_APPLE)
    }
  
 +#ifdef IP_RECVTOS
@@ -19,7 +19,7 @@
    if (confirm) {
      sendto_flags_ |= MSG_CONFIRM;
    } else {
-@@ -547,7 +552,7 @@ int UDPSocketPosix::SetBroadcast(bool broadcast) {
+@@ -548,7 +553,7 @@ int UDPSocketPosix::SetBroadcast(bool broadcast) {
    DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
    int value = broadcast ? 1 : 0;
    int rv;

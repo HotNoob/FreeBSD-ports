@@ -1,6 +1,6 @@
 PORTNAME=	kitty
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.36.2
+DISTVERSION=	0.39.1
 CATEGORIES=	x11 wayland
 
 MAINTAINER=	nivit@FreeBSD.org
@@ -35,7 +35,7 @@ LIB_DEPENDS=	libcanberra.so:audio/libcanberra \
 		libxxhash.so:devel/xxhash
 
 USES=		compiler:c11 cpe desktop-file-utils gettext-runtime gl gmake \
-		go:1.22,modules magick pkgconfig python shebangfix ssl tar:xz \
+		go:1.23,modules magick pkgconfig python shebangfix ssl tar:xz \
 		terminfo xorg
 CPE_VENDOR=	kitty_project
 
@@ -54,6 +54,8 @@ TEST_TARGET=	test
 CPPFLAGS+=	`pkg-config --cflags epoll-shim-interpose`
 LDFLAGS+=	`pkg-config --libs epoll-shim-interpose`
 
+PIE_UNSAFE=	yes
+
 BINARY_ALIAS=	python3=${PYTHON_CMD} python=${PYTHON_CMD}
 
 BUILD_DIR=	${WRKSRC}/${OPSYS:tl}-package
@@ -71,8 +73,7 @@ DOCS_MAKE_ENV=		BUILD_DOCS=yes
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} == FreeBSD && (${OSVERSION} >= 1400079 || (${OSVERSION} >= 1302505 && \
-	${OSVERSION} < 1400000))
+.if ${OPSYS} == FreeBSD
 CFLAGS+=	-Wno-error=invalid-utf8 -Winvalid-utf8
 .endif
 

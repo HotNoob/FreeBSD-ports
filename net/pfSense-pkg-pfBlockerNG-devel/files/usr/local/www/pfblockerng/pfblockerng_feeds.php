@@ -3,7 +3,7 @@
  * pfblockerng_feeds.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2016-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2016-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -27,8 +27,7 @@ require_once('/usr/local/pkg/pfblockerng/pfblockerng.inc');
 global $pfb;
 pfb_global();
 
-config_init_path('installedpackages/pfblockerngglobal');
-$fconfig	= config_get_path('installedpackages/pfblockerngglobal');
+$fconfig	= config_get_path('installedpackages/pfblockerngglobal', []);
 
 // Load/convert Feeds (w/alternative aliasname(s), if user-configured)
 $feed_info	= convert_feeds_json();

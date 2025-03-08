@@ -1,6 +1,7 @@
 PORTNAME=	cirrus-cli
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.124.2
+DISTVERSION=	0.129.1
+PORTREVISION=	2
 CATEGORIES=	devel
 
 MAINTAINER=	bofh@FreeBSD.org
@@ -16,7 +17,7 @@ USE_RC_SUBR=	${PORTNAME}
 
 GO_MODULE=	github.com/cirruslabs/cirrus-cli
 GO_TARGET=	./cmd/cirrus
-GO_BUILDFLAGS=	-ldflags="-X github.com/cirruslabs/cirrus-cli/internal/version.Version=${PORTVERSION}"
+GO_BUILDFLAGS=	-ldflags="-X github.com/cirruslabs/cirrus-cli/internal/version.Version=${DISTVERSION}"
 
 SUB_FILES=	pkg-message
 

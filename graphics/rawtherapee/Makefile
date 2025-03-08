@@ -1,5 +1,6 @@
 PORTNAME=	rawtherapee
 PORTVERSION=	5.11
+PORTREVISION=	1
 CATEGORIES=	graphics
 MASTER_SITES=	https://github.com/Beep6581/RawTherapee/releases/download/${PORTVERSION}/ \
 		https://rawtherapee.com/shared/source/ \
@@ -69,6 +70,8 @@ CONFIGURE_ENV+=	AR=${_AR} RANLIB=${_RANLIB} # for embedded RawTherapee
 CFLAGS+=	-I${LOCALBASE}/include -fPIC ${_OPT_FLAGS}
 LDFLAGS+=	-Wl,--as-needed -lpthread ${_OPT_FLAGS}
 
+PIE_UNSAFE=	yes
+
 .if defined(PACKAGE_BUILDING) && empty(CFLAGS:M-march*) && (${ARCH} == i386 || ${ARCH} == amd64 || ${ARCH} == aarch64)
 # this gets translated to -mtune=generic, see ${WRKSRC}/ProcessorTargets.cmake
 # and as of GCC 8.3, it appears that among FreeBSD's supported architectures,
@@ -110,22 +113,7 @@ OPENMP_LDFLAGS=		-lm -lomp
 # up to twice as fast as clang-16.0 compiled code.
 # So we shall stick to a modern GCC for now.
 #
-.if (${OPSYS} == FreeBSD) && (${OSVERSION} >= 1400000 && ${OSVERSION} < 1400501)
-# Unfortunately, we can't even upgrade to GCC >= 13 because that fails
-# with our libc++ header files, see https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=273682
-# - which was fixed by jhb@ commits on 2023-11-19 for head, 13.3, and 14.1,
-# with log "Merge commit 3537338d1ab9 from llvm git (by Nikolas Klauser):
-# [libc++][libunwind] Fixes to allow GCC 13 to compile libunwind/libc++abi/libc++ [...]"
-# -- once FreeBSD 14.0 will have gone out of support on 2024-10-01, remove this branch
-# and USE_GCC=yes unconditionally.
-# It would be possible to hoist a fixed pair of libcxx headers remove_cv.h and
-# remove_cvref.h into the build but that's too much of an effort for a mere month.
-# For a more thorough fix, we could look at
-# https://github.com/llvm/llvm-project/commit/55357160d0e151c32f86e1d6683b4bddbb706aa1
-USE_GCC=	12
-.else
 USE_GCC=	yes # default
-.endif
 
 .if (${OPSYS} == FreeBSD) && (${OSVERSION} >= 1500000)
 # don't waste everybody's time with Tier-2 and moving targets.

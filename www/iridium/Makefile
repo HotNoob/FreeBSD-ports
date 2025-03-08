@@ -1,5 +1,5 @@
 PORTNAME=	iridium
-PORTVERSION=	2024.08.128.2
+PORTVERSION=	2024.11.131.1
 PORTREVISION=	2
 PULSEMV=	16
 PULSEV=		${PULSEMV}.1
@@ -129,7 +129,7 @@ GN_ARGS+=	clang_use_chrome_plugins=false \
 		use_system_libffi=true \
 		use_system_libjpeg=true \
 		use_udev=false \
-		extra_cxxflags="${CXXFLAGS} ${PINCLUDES}" \
+		extra_cxxflags="${CXXFLAGS} -I${LOCALBASE}/include/libepoll-shim ${PINCLUDES}" \
 		extra_ldflags="${LDFLAGS}" \
 		ffmpeg_branding="${FFMPEG_BRAND}"
 
@@ -269,7 +269,7 @@ pre-configure:
 	#./build/linux/unbundle/remove_bundled_libraries.py [list of preserved]
 	cd ${WRKSRC} && ${SETENV} ${CONFIGURE_ENV} ${PYTHON_CMD} \
 		./build/linux/unbundle/replace_gn_files.py --system-libraries \
-		dav1d flac fontconfig freetype harfbuzz-ng icu libdrm libevent libpng \
+		dav1d flac fontconfig harfbuzz-ng icu libdrm libevent libpng \
 		libusb libwebp libxml libxslt openh264 opus || ${FALSE}
 	# Iridium uses an unreleased version of FFmpeg, so configure it
 	cd ${WRKSRC}/media/ffmpeg && \

@@ -3,7 +3,7 @@
  * freeradius.inc
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2015-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2015-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2013 Alexander Wilke <nachtfalkeaw@web.de>
  * Copyright (c) 2013 Marcello Coutinho
  * All rights reserved.
@@ -1251,7 +1251,7 @@ EOD;
 				file_notice("FreeRADIUS", gettext("Cannot create temporary FreeRADIUS certificate. Visit Services &gt; FreeRADIUS &gt; EAP tab and configure server certificates in the 'Certificates for TLS' section: " . openssl_error_string()));
 				$cert_error = true;
 			} else {
-				$a_cert = config_get_path('cert');
+				$a_cert = config_get_path('cert', []);
 				$a_cert[] = $cert;
 				config_set_path('cert', $a_cert);
 				$eapconf["ssl_server_cert"] = $cert['refid'];
@@ -3670,7 +3670,7 @@ ATTRIBUTE 		MOTP-Init-Secret 		900 	string
 ATTRIBUTE 		MOTP-PIN 			901 	string
 ATTRIBUTE 		MOTP-Offset 			902 	string
 
-\$INCLUDE /usr/share/doc/radius/dictionary.pfsense
+\$INCLUDE /usr/local/share/pfSense/radius/dictionary.pfsense
 \$INCLUDE /usr/local/pkg/dictionary.mpd
 
 EOD;
@@ -4543,7 +4543,6 @@ function freeradius_validate_ldap($post, &$input_errors) {
 
 function freeradius_plugin_certificates($pluginparams) {
 	$result = array();
-	config_init_path('installedpackages/freeradiuseapconf/config');
 	$eapconf = config_get_path('installedpackages/freeradiuseapconf/config/0', []);
 
 	if (($pluginparams['type'] == 'certificates') && !empty($eapconf)) {

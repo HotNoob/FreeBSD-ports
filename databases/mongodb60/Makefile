@@ -1,8 +1,13 @@
 PORTNAME=	mongodb
 DISTVERSIONPREFIX=	r
-DISTVERSION=	6.0.17
+DISTVERSION=	6.0.20
+PORTREVISION=	2
 CATEGORIES=	databases net
+MASTER_SITES=	https://hg.mozilla.org/mozilla-central/raw-rev/:patches
 PKGNAMESUFFIX=	${DISTVERSION:R:S/.//}
+DISTFILES=	223087fdc29f18678f6174e9807b8780e439acf6:patches # https://bugzilla.mozilla.org/1894423
+EXTRACT_ONLY=	${GH_ACCOUNT}-${GH_PROJECT}-${DISTVERSIONPREFIX}${DISTVERSION}_GH0.tar.gz \
+		${GH_ACCOUNT}-forks-spidermonkey-${MOZJS_TAG}_GH0.tar.gz
 
 MAINTAINER=	ronald@FreeBSD.org
 COMMENT=	MongoDB Community Edition (6.0.x Branch)
@@ -51,16 +56,6 @@ USE_RC_SUBR=	mongod
 SHEBANG_FILES=	buildscripts/scons.py
 python_OLD_CMD=	@python_interpreter@
 
-EXTRACT_AFTER_ARGS=	--exclude src/third_party/icu4c-* \
-			--exclude src/third_party/pcre-* \
-			--exclude src/third_party/snappy-* \
-			--exclude src/third_party/libstemmer_c \
-			--exclude src/third_party/unwind \
-			--exclude src/third_party/yaml-cpp \
-			--exclude src/third_party/zlib-* \
-			--exclude src/third_party/zstandard \
-			--no-same-owner --no-same-permissions
-
 MAKE_ARGS=	--cxx-std=17 \
 		--disable-warnings-as-errors \
 		--libc++ \
@@ -82,6 +77,16 @@ MAKE_ARGS=	--cxx-std=17 \
 CFLAGS+=	-DBOOST_NO_CXX98_FUNCTION_BASE
 
 CONFLICTS_INSTALL=	mongodb[0-9][0-9]
+
+EXTRACT_AFTER_ARGS=	--exclude src/third_party/icu4c-* \
+			--exclude src/third_party/pcre-* \
+			--exclude src/third_party/snappy-* \
+			--exclude src/third_party/libstemmer_c \
+			--exclude src/third_party/unwind \
+			--exclude src/third_party/yaml-cpp \
+			--exclude src/third_party/zlib-* \
+			--exclude src/third_party/zstandard \
+			--no-same-owner --no-same-permissions
 
 USERS=		mongodb
 GROUPS=		mongodb
@@ -122,10 +127,11 @@ post-patch:
 	${REINPLACE_CMD} -e 's#rU#r#g' ${WRKDIR}/spidermonkey-${MOZJS_TAG}/python/mozbuild/mozbuild/preprocessor.py
 	${REINPLACE_CMD} -e 's#rU#r#g' ${WRKDIR}/spidermonkey-${MOZJS_TAG}/python/mozbuild/mozbuild/backend/base.py
 	${REINPLACE_CMD} -e 's#rU#r#g' ${WRKDIR}/spidermonkey-${MOZJS_TAG}/python/mozbuild/mozbuild/action/process_define_files.py
+	${PATCH} -d ${WRKSRC}/src/third_party/mozjs/extract --quiet -p1 -V none < ${DISTDIR}/223087fdc29f18678f6174e9807b8780e439acf6
 
 pre-configure:
 	# Verify we downloaded the proper mozjs git tag.
-	sh -c "test \"X`grep -E '^LIB_GIT_REVISION=' ${WRKSRC}/src/third_party/mozjs/get-sources.sh`\" = \"XLIB_GIT_REVISION=${MOZJS_TAG}\""
+	${SH} -c "test \"X`grep -E '^LIB_GIT_REVISION=' ${WRKSRC}/src/third_party/mozjs/get-sources.sh`\" = \"XLIB_GIT_REVISION=${MOZJS_TAG}\""
 
 do-configure:
 # Replacement of ${WRKSRC}/src/third_party/mozjs/get-sources.sh

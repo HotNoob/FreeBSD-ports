@@ -1,5 +1,6 @@
 PORTNAME?=	mariadb
-PORTVERSION=	11.4.3
+PORTVERSION=	11.4.5
+PORTREVISION?=	1
 CATEGORIES=	databases
 MASTER_SITES=	https://mirror.nodesdirect.com/${SITESDIR}/ \
 		https://mirror.one.com/${SITESDIR}/ \
@@ -109,6 +110,7 @@ CMAKE_ARGS+=	-DCMAKE_PREFIX_PATH=${PREFIX} \
 		-DINSTALL_UNIX_ADDRDIR="${MARIADB_RUNDIR}/${MARIADB_SOCK}" \
 		-DWITH_PCRE=system \
 		-DPCRE_LIBRARY_DIRS=${PREFIX}/lib \
+		-DPCRE_FOUND=true \
 		-DWITH_LIBFMT=system \
 		-DLIBFMT_INCLUDE_DIR=${PREFIX}/include \
 		-DHAVE_SYSTEM_LIBFMT=yes \
@@ -132,7 +134,8 @@ ETCDIR=		${PREFIX}/etc/mysql
 CONFLICTS_INSTALL=	mariadb10[0-57-9]-${PKGNAMESUFFIX:C/^[0-9]*-//}-* \
 			mysql[0-9]*-${PKGNAMESUFFIX:C/^[0-9]*-//}-* \
 			mysqlwsrep* \
-			percona[0-9]*-${PKGNAMESUFFIX:C/^[0-9]*-//}-*
+			percona[0-9]*-${PKGNAMESUFFIX:C/^[0-9]*-//}-* \
+			mytop
 
 FASTMTX_CMAKE_BOOL=	WITH_FAST_MUTEXES
 GSSAPI_BASE_USES=	gssapi

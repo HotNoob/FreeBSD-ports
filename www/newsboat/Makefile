@@ -1,5 +1,5 @@
 PORTNAME=	newsboat
-DISTVERSION=	2.36
+DISTVERSION=	2.37
 PORTREVISION=	2
 CATEGORIES=	www
 MASTER_SITES=	https://newsboat.org/releases/${DISTVERSION}/
@@ -40,8 +40,7 @@ TESTING_UNSAFE=	https://github.com/newsboat/newsboat/issues/2783
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} == FreeBSD && (${OSVERSION} >= 1400091 || (${OSVERSION} >= 1302507 && \
-	${OSVERSION} < 1400000))
+.if ${OPSYS} == FreeBSD
 CFLAGS+=	-Wno-error=incompatible-function-pointer-types
 .endif
 
@@ -51,5 +50,8 @@ post-patch:
 		${WRKSRC}/config.sh
 	@${REINPLACE_CMD} -e 's|-liconv|${ICONV_LIB} -lcrypto ${NCURSESLIBS}|;s|-Werror||' \
 		${WRKSRC}/Makefile
+
+post-install:
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/*
 
 .include <bsd.port.mk>

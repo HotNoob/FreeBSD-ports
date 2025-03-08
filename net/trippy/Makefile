@@ -1,5 +1,5 @@
 PORTNAME=	trippy
-DISTVERSION=	0.11.0
+DISTVERSION=	0.12.2
 PORTREVISION=	1
 CATEGORIES=	net
 
@@ -32,7 +32,7 @@ SUID_PLIST_FILES_OFF=	"@(,,0100) bin/trip"
 
 post-build-MANPAGES-on:
 	help2man -s 1 -Nn "${COMMENT}" \
-		${CARGO_TARGET_DIR}/${CARGO_BUILD_TARGET}/*/trip \
+		${CARGO_TARGET_DIR}/*/trip \
 		-o ${WRKSRC}/trip.1
 
 post-install-MANPAGES-on:

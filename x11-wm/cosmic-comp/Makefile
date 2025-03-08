@@ -1,5 +1,6 @@
 PORTNAME=	cosmic-comp
-PORTVERSION=	s20240909
+DISTVERSIONPREFIX=	epoch-
+DISTVERSION=	1.0.0-alpha.5.1
 PORTREVISION=	1
 CATEGORIES=	x11-wm wayland
 
@@ -11,6 +12,7 @@ LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libudev.so:devel/libudev-devd \
+		libdisplay-info.so:sysutils/libdisplay-info \
 		libseat.so:sysutils/seatd \
 		libinput.so:x11/libinput \
 		libxkbcommon.so:x11/libxkbcommon
@@ -23,8 +25,7 @@ USE_GITHUB=	yes
 USE_GL=		gbm
 USE_XORG=	pixman
 GH_ACCOUNT=	pop-os
-GH_TAGNAME=	epoch-1.0.0-alpha.1-56-g0d048b1
-GH_TUPLE=	pop-os:iced:0.4.2-2011-ge31e29e9:iced/../${WRKSRC_crate_iced:T}/iced
+GH_TUPLE=	pop-os:iced:0.4.2-2992-g9ad04dad:iced/../${WRKSRC_crate_iced:T}/iced
 CARGO_FEATURES=	--no-default-features # disable systemd
 PLIST_FILES=	bin/${PORTNAME} \
 		share/cosmic/com.system76.CosmicSettings.Shortcuts/v1/defaults/keybindings.ron \
@@ -47,6 +48,10 @@ post-patch:
 # /sys by default is a symlink to /usr/src/sys
 	@${REINPLACE_CMD} -e 's,/sys,${LINUXBASE}&,' \
 		${WRKSRC}/src/debug.rs
+# https://github.com/RazrFalcon/fontdb/issues/61
+	@${REINPLACE_CMD} -e 's,/usr/share,${DATADIR:H},' \
+		-e 's,/etc,${LOCALBASE}&,' \
+		${WRKSRC_crate_fontdb}/src/lib.rs
 
 post-install:
 # Install extras similar to ${WRKSRC}/Makefile

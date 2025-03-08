@@ -4,7 +4,7 @@
  * pfBlockerNG - Unbound resolver python integration
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2015-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2015-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -25,7 +25,7 @@ require_once('config.inc');
 require_once('globals.inc');
 global $g;
 
-config_read_file(true);
+config_read_file(false, true);
 
 // Enable logging if called via pfBlockerNG
 $verbose = FALSE;

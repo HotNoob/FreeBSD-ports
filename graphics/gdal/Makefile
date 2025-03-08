@@ -1,5 +1,5 @@
 PORTNAME=	gdal
-PORTVERSION=	3.9.2
+PORTVERSION=	3.10.2
 CATEGORIES=	graphics geography
 MASTER_SITES=	https://download.osgeo.org/gdal/${PORTVERSION}/ \
 		LOCAL/sunpoet
@@ -205,6 +205,14 @@ XERCES_CMAKE_BOOL=	GDAL_USE_XERCESC
 XERCES_LIB_DEPENDS=	libxerces-c.so:textproc/xerces-c3
 ZSTD_CMAKE_BOOL=	GDAL_USE_ZSTD
 ZSTD_LIB_DEPENDS=	libzstd.so:archivers/zstd
+
+.include <bsd.port.options.mk>
+
+.if ${ARCH} == powerpc || ${ARCH} == powerpc64
+PLIST_SUB+=	BIGENDIAN="@comment "
+.else
+PLIST_SUB+=	BIGENDIAN=""
+.endif
 
 # Clean up bundled libraries
 .if !defined(MAINTAINER_MODE)

@@ -3,7 +3,7 @@
  * bind.inc
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2015-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2015-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2013 Juliano Oliveira
  * Copyright (c) 2013 Adriano Brancher
  * Copyright (c) 2013 Marcello Coutinho
@@ -211,7 +211,7 @@ EOD;
 			} elseif (is_ipaddr($listenon)) {
 				$bind_listenon .= $listenon."; ";
 			} else {
-				$listenon = pfSense_get_interface_addresses(convert_friendly_interface_to_real_interface_name($listenon));
+				$listenon = get_interface_addresses(convert_friendly_interface_to_real_interface_name($listenon));
 				if (is_ipaddr($listenon['ipaddr'])) {
 					$bind_listenon .= $listenon['ipaddr']."; ";
 				}
@@ -345,8 +345,9 @@ EOD;
 
 		$rpz_zones = array();
 		foreach ($bindzone as $zone) {
+			$zoneviewlist = explode(',', $zone['view']);
 			if (isset($zone['rpz']) && ($zone['rpz'] == "on") &&
-			    ($zone['disabled'] != "on") && ($zone['view'] == $viewname)) {
+			   ($zone['disabled'] != "on") && in_array($viewname, $zoneviewlist)) {
 			    $rpz_zones[] = reverse_zonename($zone['name'], $zone['reverso'], $zone['reversv6o']);
 			}
 		}

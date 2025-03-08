@@ -1,5 +1,6 @@
 PORTNAME=	gitlab-agent
 PORTVERSION=	${GITLAB_VERSION}
+PORTREVISION=	${GITLAB_PORTREVISION} # modify it in www/gitlab/Makefile.common
 DISTVERSIONPREFIX=	v
 CATEGORIES=	net
 
@@ -13,7 +14,7 @@ LICENSE=	MIT
 BUILD_DEPENDS=	git>=0:devel/git \
 		golangci-lint>=0:devel/golangci-lint
 
-USES=		go:modules,1.22
+USES=		go:modules,1.23
 GO_MODULE=	gitlab.com/gitlab-org/cluster-integration/gitlab-agent/v17
 
 _BUILD_DATE=	$$(date -u "+%Y-%m-%d-%H%M UTC")

@@ -3,7 +3,7 @@
  * stunnel.inc
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2015-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2015-2025 Rubicon Communications, LLC (Netgate)
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,6 @@ define('STUNNEL_ETCDIR', STUNNEL_LOCALBASE . "/etc/stunnel");
 define('STUNNEL_CHROOTDIR', '/var/tmp/stunnel');
 
 function stunnel_save() {
-	config_init_path('installedpackages/stunnel/config');
 	$stunnel_conf = STUNNEL_ETCDIR . "/stunnel.conf";
 
 	if (!empty(config_get_path('installedpackages/stunnel/config'))) {
@@ -203,7 +202,6 @@ function stunnel_deinstall() {
 }
 
 function stunnel_sync_config() {
-	config_init_path('hasync');
 	$system_carp = config_get_path('hasync');
 	if (!is_array($system_carp) ||
 	    !$system_carp['synchronizetoip'] ||
@@ -249,7 +247,6 @@ EOD;
 
 function stunnel_plugin_certificates($pluginparams) {
 	$result = array();
-	config_init_path('installedpackages/stunnel/config');
 	$stunnelconfig = config_get_path('installedpackages/stunnel/config');
 
 	if (($pluginparams['type'] == 'certificates') && ($pluginparams['event'] == 'used_certificates') &&

@@ -1,3 +1,3 @@
-TIMESTAMP = 1724363903
-SHA256 (NetworkConfiguration-dhcpcd-v10.0.10_GH0.tar.gz) = 3ea87ba6c37ec594620fbaa7f2f6bc1dd8893e0aa5db5c40f532b700d05fe03f
-SIZE (NetworkConfiguration-dhcpcd-v10.0.10_GH0.tar.gz) = 368076
+TIMESTAMP = 1739628276
+SHA256 (dhcpcd-10.2.0.tar.xz) = 7916fed1560835b5b9d70d27604c3858e501c5a177eef027f96eb7ab0f711399
+SIZE (dhcpcd-10.2.0.tar.xz) = 274896

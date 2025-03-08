@@ -1,6 +1,6 @@
 PORTNAME=	exult
-DISTVERSION?=	1.10.0
-PORTREVISION?=	0
+DISTVERSION?=	1.10.1
+PORTREVISION?=	1
 PORTEPOCH=	1
 CATEGORIES=	games
 
@@ -30,10 +30,10 @@ CONFIGURE_ARGS=	--disable-static \
 CONFLICTS_INSTALL=	exult-devel
 SUB_FILES=		pkg-message
 PLIST?=			${.CURDIR}/pkg-plist
+PORTDOCS=	*
 
 .if !defined(MASTERDIR)
 MASTER_SITES=	http://prdownloads.sourceforge.net/exult/
-NO_WRKSUBDIR=	yes
 .else
 USE_GITHUB=	yes
 .endif

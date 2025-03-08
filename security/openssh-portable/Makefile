@@ -1,5 +1,5 @@
 PORTNAME=	openssh
-DISTVERSION=	9.8p1
+DISTVERSION=	9.9p2
 PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	security
@@ -73,7 +73,6 @@ TCP_WRAPPERS_EXTRA_PATCHES=${FILESDIR}/extra-patch-tcpwrappers
 
 LDNS_CONFIGURE_WITH=	ldns=${LOCALBASE}
 LDNS_LIB_DEPENDS=	libldns.so:dns/ldns
-LDNS_EXTRA_PATCHES=	${FILESDIR}/extra-patch-ldns
 
 HPN_CONFIGURE_WITH=		hpn
 NONECIPHER_CONFIGURE_WITH=	nonecipher
@@ -109,13 +108,13 @@ EXTRA_PATCHES+=	${FILESDIR}/extra-patch-hpn-gss-glue
 .  endif
 # - See https://sources.debian.org/data/main/o/openssh/ for which subdir to
 # pull from.
-GSSAPI_DEBIAN_VERSION=	9.8p1
-GSSAPI_DEBIAN_SUBDIR=	${GSSAPI_DEBIAN_VERSION:U${DISTVERSION}}-3
+GSSAPI_DEBIAN_VERSION=	9.9p2
+GSSAPI_DEBIAN_SUBDIR=	${GSSAPI_DEBIAN_VERSION:U${DISTVERSION}}-1
 # - Debian does not use a versioned filename so we trick fetch to make one for
 # us with the ?<anything>=/ trick.
 PATCH_SITES+=	https://sources.debian.org/data/main/o/openssh/1:${GSSAPI_DEBIAN_SUBDIR}/debian/patches/gssapi.patch?dummy=/:gsskex
 # Bump this when updating the patch location
-GSSAPI_DISTVERSION=	9.8p1
+GSSAPI_DISTVERSION=	9.9p1
 PATCHFILES+=	openssh-${GSSAPI_DISTVERSION:U${DISTVERSION}}-gsskex-all-debian-rh-${GSSAPI_DISTVERSION}.patch:-p1:gsskex
 EXTRA_PATCHES+=	${FILESDIR}/extra-patch-gssapi-kexgssc.c
 EXTRA_PATCHES+=	${FILESDIR}/extra-patch-gssapi-kexgsss.c
@@ -223,6 +222,8 @@ post-install:
 	    ${STAGEDIR}${ETCDIR}/ssh_config.sample
 	${MV} ${STAGEDIR}${ETCDIR}/sshd_config \
 	    ${STAGEDIR}${ETCDIR}/sshd_config.sample
+	${MKDIR} ${STAGEDIR}${ETCDIR}/ssh_config.d \
+		 ${STAGEDIR}${ETCDIR}/sshd_config.d
 .if ${PORT_OPTIONS:MHPN} || ${PORT_OPTIONS:MNONECIPHER}
 	${MKDIR} ${STAGEDIR}${DOCSDIR}
 	${INSTALL_DATA} ${WRKSRC}/HPN-README ${STAGEDIR}${DOCSDIR}

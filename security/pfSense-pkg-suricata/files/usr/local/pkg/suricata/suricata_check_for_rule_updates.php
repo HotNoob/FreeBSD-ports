@@ -3,7 +3,7 @@
  * suricata_check_for_rule_updates.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2006-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2006-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2005 Bill Marquette <bill.marquette@gmail.com>.
  * Copyright (c) 2003-2004 Manuel Kasper <mk@neon1.net>.
  * Copyright (c) 2009 Robert Zelaya Sr. Developer
@@ -431,9 +431,6 @@ $notify_message = gettext("Suricata rules update started: " . date("Y-m-d H:i:s"
 $notify_new_message = '';
 $last_curl_error = "";
 $update_errors = false;
-
-/* Ensure our basic config array of interfaces exists to prevent PHP foreach() errors */
-config_init_path('installedpackages/suricata/rule');
 
 /* Save current state (running/not running) for each enabled Suricatat interface */
 $active_interfaces = array();

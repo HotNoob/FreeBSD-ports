@@ -1,4 +1,4 @@
---- chrome/common/chrome_features.h.orig	2024-08-26 12:06:38 UTC
+--- chrome/common/chrome_features.h.orig	2025-02-19 07:43:18 UTC
 +++ chrome/common/chrome_features.h
 @@ -55,13 +55,13 @@ BASE_DECLARE_FEATURE(kUseAdHocSigningForWebAppShims);
  #endif  // BUILDFLAG(IS_MAC)
@@ -16,7 +16,7 @@
  COMPONENT_EXPORT(CHROME_FEATURES)
  BASE_DECLARE_FEATURE(kBackgroundModeAllowRestart);
  #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
-@@ -192,7 +192,7 @@ BASE_DECLARE_FEATURE(kDesktopPWAsPreventClose);
+@@ -155,7 +155,7 @@ BASE_DECLARE_FEATURE(kDesktopPWAsPreventClose);
  COMPONENT_EXPORT(CHROME_FEATURES)
  BASE_DECLARE_FEATURE(kDesktopPWAsTabStripSettings);
  
@@ -25,7 +25,7 @@
  COMPONENT_EXPORT(CHROME_FEATURES) BASE_DECLARE_FEATURE(kChromeAppsDeprecation);
  COMPONENT_EXPORT(CHROME_FEATURES)
  BASE_DECLARE_FEATURE(kShortcutsNotApps);
-@@ -545,7 +545,7 @@ BASE_DECLARE_FEATURE(kKAnonymityServiceOHTTPRequests);
+@@ -465,7 +465,7 @@ BASE_DECLARE_FEATURE(kKAnonymityServiceOHTTPRequests);
  COMPONENT_EXPORT(CHROME_FEATURES)
  BASE_DECLARE_FEATURE(kKAnonymityServiceStorage);
  
@@ -34,7 +34,7 @@
  COMPONENT_EXPORT(CHROME_FEATURES) BASE_DECLARE_FEATURE(kLinuxLowMemoryMonitor);
  COMPONENT_EXPORT(CHROME_FEATURES)
  extern const base::FeatureParam<int> kLinuxLowMemoryMonitorModerateLevel;
-@@ -553,7 +553,7 @@ COMPONENT_EXPORT(CHROME_FEATURES)
+@@ -473,7 +473,7 @@ COMPONENT_EXPORT(CHROME_FEATURES)
  extern const base::FeatureParam<int> kLinuxLowMemoryMonitorCriticalLevel;
  #endif  // BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CHROMEOS)
  

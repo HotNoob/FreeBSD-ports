@@ -3,7 +3,7 @@
  * wg_api.inc
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2021-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2021-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2021 R. Christian McDonald (https://github.com/rcmcdonald91)
  * Copyright (c) 2021 Vajonam
  * All rights reserved.
@@ -243,10 +243,20 @@ function wg_interface_update_addresses($if_name, &$cmds = null) {
 		// Assigned tunnel interfaces are handled by pfSense and should be ignored here
 		if (!is_wg_tunnel_assigned($tunnel['name'])) {
 			// Get an array of the current addresses assigned to the tunnel interface
-			$current = pfSense_getall_interface_addresses($tunnel['name']);
+			$current = [];
+			$interface_addresses = pfSense_get_ifaddrs($tunnel['name']);
+			foreach (array_get_path($interface_addresses, 'addrs', []) as $addrs) {
+				$current[] = "{$addrs['addr']}/{$addrs['subnetbits']}";
+			}
+			foreach (array_get_path($interface_addresses, 'addrs6', []) as $addrs) {
+				$current[] = Net_IPv6::uncompress($addrs['addr']) . "/{$addrs['subnetbits']}";
+			}
 
 			// Get an array of the addresses to be assigned to the interface
 			$desired = array_map(function($x) {
+				if (is_ipaddrv6($x['address'])) {
+					$x = Net_IPv6::uncompress($x['address']);
+				}
 				return "{$x['address']}/{$x['mask']}"; 
 			}, $tunnel['addresses']['row']);
 

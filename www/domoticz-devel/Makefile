@@ -1,15 +1,17 @@
 PORTNAME=	domoticz
 PORTVERSION=	2024.7.${DOMOTICZ_REL}
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	www
 PKGNAMESUFFIX=	-devel
 
-MAINTAINER=	kiwi@oav.net
+MAINTAINER=	kiwi@FreeBSD.org
 COMMENT=	Home Automation System (Development Branch)
 WWW=		https://www.domoticz.com
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/License.txt
+
+BROKEN=		fails to build with Boost>=1.87
 
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libboost_system.so:devel/boost-libs \

@@ -1,6 +1,6 @@
---- components/feature_engagement/public/feature_list.h.orig	2024-08-26 12:06:38 UTC
+--- components/feature_engagement/public/feature_list.h.orig	2025-02-19 07:43:18 UTC
 +++ components/feature_engagement/public/feature_list.h
-@@ -278,7 +278,7 @@ DEFINE_VARIATION_PARAM(kIPHiOSContextualPanelPriceInsi
+@@ -279,7 +279,7 @@ DEFINE_VARIATION_PARAM(kIPHiOSSharedTabGroupForeground
  #endif  // BUILDFLAG(IS_IOS)
  
  #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
@@ -9,7 +9,7 @@
  #if BUILDFLAG(GOOGLE_CHROME_BRANDING)
  DEFINE_VARIATION_PARAM(kEsbDownloadRowPromoFeature, "EsbDownloadRowPromo");
  #endif
-@@ -385,7 +385,8 @@ DEFINE_VARIATION_PARAM(kIPHTabGroupsSaveV2CloseGroupFe
+@@ -389,7 +389,8 @@ DEFINE_VARIATION_PARAM(kIPHTabGroupsSaveV2CloseGroupFe
          // BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
  
  #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
@@ -18,26 +18,26 @@
 +    BUILDFLAG(IS_BSD)
  DEFINE_VARIATION_PARAM(kIPHAutofillCreditCardBenefitFeature,
                         "IPH_AutofillCreditCardBenefit");
- DEFINE_VARIATION_PARAM(kIPHAutofillExternalAccountProfileSuggestionFeature,
-@@ -474,7 +475,7 @@ DEFINE_VARIATION_PARAM(kIPHScalableIphHelpAppBasedTenF
+ 
+@@ -483,7 +484,7 @@ DEFINE_VARIATION_PARAM(kIPHScalableIphHelpAppBasedTenF
  DEFINE_VARIATION_PARAM(kIPHScalableIphGamingFeature, "IPH_ScalableIphGaming");
- #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
+ #endif  // BUILDFLAG(IS_CHROMEOS)
  
 -#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
 +#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
  DEFINE_VARIATION_PARAM(kIPHDesktopPWAsLinkCapturingLaunch,
                         "IPH_DesktopPWAsLinkCapturingLaunch");
- #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
-@@ -632,7 +633,7 @@ constexpr flags_ui::FeatureEntry::FeatureVariation
-         VARIATION_ENTRY(kIPHiOSContextualPanelSampleModelFeature),
-         VARIATION_ENTRY(kIPHiOSContextualPanelPriceInsightsFeature),
+ DEFINE_VARIATION_PARAM(kIPHDesktopPWAsLinkCapturingLaunchAppInTab,
+@@ -644,7 +645,7 @@ inline constexpr flags_ui::FeatureEntry::FeatureVariat
+         VARIATION_ENTRY(kIPHiOSLensOverlayEntrypointTipFeature),
+         VARIATION_ENTRY(kIPHiOSSharedTabGroupForeground),
  #elif BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
 -    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
 +    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
          VARIATION_ENTRY(kIPHBatterySaverModeFeature),
          VARIATION_ENTRY(kIPHCompanionSidePanelFeature),
          VARIATION_ENTRY(kIPHCompanionSidePanelRegionSearchFeature),
-@@ -690,7 +691,8 @@ constexpr flags_ui::FeatureEntry::FeatureVariation
+@@ -703,7 +704,8 @@ inline constexpr flags_ui::FeatureEntry::FeatureVariat
          // BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
  
  #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
@@ -45,14 +45,14 @@
 +    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA) || \
 +    BUILDFLAG(IS_BSD)
          VARIATION_ENTRY(kIPHAutofillCreditCardBenefitFeature),
-         VARIATION_ENTRY(kIPHAutofillExternalAccountProfileSuggestionFeature),
-         VARIATION_ENTRY(kIPHAutofillManualFallbackFeature),
-@@ -741,7 +743,7 @@ constexpr flags_ui::FeatureEntry::FeatureVariation
+         VARIATION_ENTRY(kIPHAutofillCardInfoRetrievalSuggestionFeature),
+         VARIATION_ENTRY(kIPHAutofillDisabledVirtualCardSuggestionFeature),
+@@ -755,7 +757,7 @@ inline constexpr flags_ui::FeatureEntry::FeatureVariat
          VARIATION_ENTRY(kIPHScalableIphGamingFeature),
- #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
+ #endif  // BUILDFLAG(IS_CHROMEOS)
  
 -#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
 +#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
          VARIATION_ENTRY(kIPHDesktopPWAsLinkCapturingLaunch),
+         VARIATION_ENTRY(kIPHDesktopPWAsLinkCapturingLaunchAppInTab),
  #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
- 

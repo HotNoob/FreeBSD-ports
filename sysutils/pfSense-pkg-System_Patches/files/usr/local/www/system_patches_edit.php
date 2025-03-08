@@ -3,7 +3,7 @@
  * system_patches_edit.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2012-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2012-2025 Rubicon Communications, LLC (Netgate)
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,8 +31,6 @@ require_once("itemid.inc");
 require_once("patches.inc");
 require_once("pkg-utils.inc");
 require_once('classes/Form.class.php');
-
-config_init_path('installedpackages/patches/item');
 
 $id = $_GET['id'];
 if (is_numericint($_POST['id'])) {

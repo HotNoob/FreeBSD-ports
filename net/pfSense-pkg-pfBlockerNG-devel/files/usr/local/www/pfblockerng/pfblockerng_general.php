@@ -3,7 +3,7 @@
  * pfblockerng_general.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2016-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2016-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -36,8 +36,7 @@ elseif (!empty(config_get_path('installedpackages/pfblockerng/config/0'))) {
 	$pfb_wizard = FALSE;
 }
 
-config_init_path('installedpackages/pfblockerng/config/0');
-$pfb['gconfig'] = config_get_path('installedpackages/pfblockerng/config/0');
+$pfb['gconfig'] = config_get_path('installedpackages/pfblockerng/config/0', []);
 
 $pconfig = array();
 $pconfig['enable_cb']			= $pfb['gconfig']['enable_cb']				?: '';

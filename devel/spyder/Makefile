@@ -1,6 +1,6 @@
 PORTNAME=	spyder
 DISTVERSIONPREFIX=	v
-DISTVERSION=	6.0.0
+DISTVERSION=	6.0.4
 CATEGORIES=	devel science python
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -31,9 +31,9 @@ RUN_DEPENDS=	\
 		${PYTHON_PKGNAMEPREFIX}pexpect>=4.4.0:misc/py-pexpect@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pickleshare>=0.4:databases/py-pickleshare@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}psutil>=5.3:sysutils/py-psutil@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}PyGithub>0:devel/py-PyGithub@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}PyGithub>=2.3.0:devel/py-PyGithub@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pygments>=2.0:textproc/py-pygments@${PY_FLAVOR} \
-		pylint${PYTHON_PKGNAMESUFFIX}>=3.1.0:devel/pylint@${PY_FLAVOR} \
+		pylint${PYTHON_PKGNAMESUFFIX}>=3.1:devel/pylint@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pylint-venv>=3.0.2:devel/py-pylint-venv@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pyls-spyder>=0.4.0:textproc/py-pyls-spyder@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}qt5-webengine>=5.15:www/py-qt5-webengine@${PY_FLAVOR} \
@@ -49,7 +49,7 @@ RUN_DEPENDS=	\
 		${PYTHON_PKGNAMEPREFIX}rtree>=0.9.7:devel/py-rtree@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}setuptools>=49.6.0:devel/py-setuptools@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sphinx>=0.6.6:textproc/py-sphinx@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}spyder-kernels>=3.0.0:devel/py-spyder-kernels@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}spyder-kernels>=3.0.2:devel/py-spyder-kernels@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}superqt>=0.6.2:x11-toolkits/py-superqt@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}textdistance>=4.2.0:textproc/py-textdistance@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}three-merge>=0.1.1:textproc/py-three-merge@${PY_FLAVOR} \
@@ -59,7 +59,7 @@ RUN_DEPENDS=	\
 
 USES=		desktop-file-utils python pyqt:5
 USE_PYTHON=	distutils autoplist noflavors
-USE_PYQT=	pyqt5 sip
+USE_PYQT=	pyqt5
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	spyder-ide

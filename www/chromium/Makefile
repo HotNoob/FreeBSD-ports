@@ -1,6 +1,5 @@
 PORTNAME=	chromium
-PORTVERSION=	128.0.6613.119
-PORTREVISION=	2
+PORTVERSION=	133.0.6943.126
 PULSEMV=	16
 PULSEV=		${PULSEMV}.1
 CATEGORIES=	www wayland
@@ -8,7 +7,6 @@ MASTER_SITES=	https://commondatastorage.googleapis.com/chromium-browser-official
 		https://nerd.hu/distfiles/:external \
 		https://freedesktop.org/software/pulseaudio/releases/:pulseaudio
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
-		chrome-linux-${PORTVERSION}-llvm17.profdata${EXTRACT_SUFX}:external \
 		pulseaudio-${PULSEV}.tar.gz:pulseaudio
 
 MAINTAINER=	chromium@FreeBSD.org
@@ -88,7 +86,7 @@ USE_PERL5=	build
 USE_XORG=	x11 xcb xcomposite xcursor xext xdamage xfixes xi \
 		xorgproto xrandr xrender xscrnsaver xtst
 USE_QT=		buildtools:build
-SHEBANG_FILES=	chrome/tools/build/linux/chrome-wrapper buildtools/linux64/clang-format
+SHEBANG_FILES=	chrome/tools/build/linux/chrome-wrapper #buildtools/linux64/clang-format
 
 MAKE_ARGS=	-C out/${BUILDTYPE}
 ALL_TARGET=	chrome
@@ -105,7 +103,6 @@ BINARY_ALIAS=	python3=${PYTHON_CMD} \
 GN_ARGS+=	clang_use_chrome_plugins=false \
 		enable_backup_ref_ptr_support=false \
 		enable_hangout_services_extension=true \
-		enable_log_error_not_reached=true \
 		enable_nacl=false \
 		enable_remoting=false \
 		enable_widevine=true \
@@ -128,7 +125,7 @@ GN_ARGS+=	clang_use_chrome_plugins=false \
 		use_system_libffi=true \
 		use_system_libjpeg=true \
 		use_udev=false \
-		extra_cxxflags="${CXXFLAGS} ${PINCLUDES}" \
+		extra_cxxflags="${CXXFLAGS} -I${LOCALBASE}/include/libepoll-shim ${PINCLUDES}" \
 		extra_ldflags="${LDFLAGS}" \
 		ffmpeg_branding="${FFMPEG_BRAND}"
 
@@ -230,7 +227,7 @@ TEST_ALL_TARGET=	${TEST_TARGETS}
 IGNORE=		you have selected HEIMDAL_BASE but do not have Heimdal installed in base
 .endif
 
-LLVM_DEFAULT=		18
+LLVM_DEFAULT=		19
 BUILD_DEPENDS+=		clang${LLVM_DEFAULT}:devel/llvm${LLVM_DEFAULT}
 BINARY_ALIAS+=		cpp=${LOCALBASE}/bin/clang-cpp${LLVM_DEFAULT} \
 			cc=${LOCALBASE}/bin/clang${LLVM_DEFAULT} \
@@ -285,7 +282,7 @@ pre-configure:
 	#./build/linux/unbundle/remove_bundled_libraries.py [list of preserved]
 	cd ${WRKSRC} && ${SETENV} ${CONFIGURE_ENV} ${PYTHON_CMD} \
 		./build/linux/unbundle/replace_gn_files.py --system-libraries \
-		dav1d flac fontconfig freetype harfbuzz-ng icu libdrm libevent libpng \
+		dav1d flac fontconfig harfbuzz-ng libdrm libpng \
 		libusb libwebp libxml libxslt openh264 opus || ${FALSE}
 	# Chromium uses an unreleased version of FFmpeg, so configure it
 	cd ${WRKSRC}/media/ffmpeg && \
@@ -298,7 +295,8 @@ pre-configure:
 .endfor
 	touch ${WRKDIR}/pulseaudio-${PULSEV}/src/pulse/version.h
 	@${REINPLACE_CMD} -e 's|$${LOCALBASE}|${LOCALBASE}|;s|$${MODCLANG_VERSION}|${LLVM_DEFAULT}|' \
-		${WRKSRC}/build/rust/rust_bindgen.gni
+		${WRKSRC}/build/rust/rust_bindgen.gni \
+		${WRKSRC}/build/rust/rust_bindgen_generator.gni
 
 do-configure:
 	# GN generator bootstrapping and generating ninja files

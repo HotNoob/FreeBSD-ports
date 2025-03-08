@@ -1,4 +1,4 @@
---- content/renderer/render_thread_impl.cc.orig	2024-08-27 06:28:16 UTC
+--- content/renderer/render_thread_impl.cc.orig	2024-12-22 12:24:29 UTC
 +++ content/renderer/render_thread_impl.cc
 @@ -214,6 +214,8 @@
  
@@ -15,7 +15,7 @@
    const bool enable_video_decode_accelerator =
 -#if BUILDFLAG(IS_LINUX)
 +#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
-       base::FeatureList::IsEnabled(media::kVaapiVideoDecodeLinux) &&
+       base::FeatureList::IsEnabled(media::kAcceleratedVideoDecodeLinux) &&
  #endif  // BUILDFLAG(IS_LINUX)
        !cmd_line->HasSwitch(switches::kDisableAcceleratedVideoDecode) &&
 @@ -1026,7 +1028,7 @@ media::GpuVideoAcceleratorFactories* RenderThreadImpl:
@@ -24,10 +24,10 @@
    const bool enable_video_encode_accelerator =
 -#if BUILDFLAG(IS_LINUX)
 +#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
-       base::FeatureList::IsEnabled(media::kVaapiVideoEncodeLinux) &&
+       base::FeatureList::IsEnabled(media::kAcceleratedVideoEncodeLinux) &&
  #else
        !cmd_line->HasSwitch(switches::kDisableAcceleratedVideoEncode) &&
-@@ -1801,7 +1803,7 @@ std::unique_ptr<CodecFactory> RenderThreadImpl::Create
+@@ -1830,7 +1832,7 @@ std::unique_ptr<CodecFactory> RenderThreadImpl::Create
      bool enable_video_encode_accelerator) {
    mojo::PendingRemote<media::mojom::VideoEncodeAcceleratorProvider>
        vea_provider;

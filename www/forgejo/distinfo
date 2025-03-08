@@ -1,3 +1,3 @@
-TIMESTAMP = 1725643658
-SHA256 (forgejo-src-8.0.3.tar.gz) = b543532cf01453967c331063639b172600cccd62d815e6815a4f05a25a0b0795
-SIZE (forgejo-src-8.0.3.tar.gz) = 53477625
+TIMESTAMP = 1739091028
+SHA256 (forgejo-src-10.0.1.tar.gz) = 3c6be3d48481da4ec38d754bd19ea3696408dbdb575a5648b125f4df4911bcca
+SIZE (forgejo-src-10.0.1.tar.gz) = 56997906

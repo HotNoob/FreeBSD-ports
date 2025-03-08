@@ -1,10 +1,11 @@
---- setup.py.orig	2024-08-26 02:27:07 UTC
+--- setup.py.orig	2024-12-19 06:28:23 UTC
 +++ setup.py
-@@ -366,7 +366,6 @@ def get_submodule_folders():
-             "cpuinfo",
-             "onnx",
-             "foxi",
--            "QNNPACK",
-             "fbgemm",
-             "cutlass",
-         ]
+@@ -1144,7 +1144,7 @@ def main():
+         "typing-extensions>=4.8.0",
+         'setuptools ; python_version >= "3.12"',
+         'sympy==1.12.1 ; python_version == "3.8"',
+-        'sympy==1.13.1 ; python_version >= "3.9"',
++        'sympy; python_version >= "3.9"',
+         "networkx",
+         "jinja2",
+         "fsspec",

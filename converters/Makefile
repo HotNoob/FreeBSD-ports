@@ -16,6 +16,8 @@
     SUBDIR += btoa
     SUBDIR += chmview
     SUBDIR += cl-babel
+    SUBDIR += cl-babel-ccl
+    SUBDIR += cl-babel-clisp
     SUBDIR += cl-babel-sbcl
     SUBDIR += cmios9
     SUBDIR += cocot
@@ -128,6 +130,7 @@
     SUBDIR += p5-Unicode-RecursiveDowngrade
     SUBDIR += p5-Unicode-String
     SUBDIR += p5-Unicode-Stringprep
+    SUBDIR += p5-Unicode-UTF8
     SUBDIR += p5-Unicode-UTF8simple
     SUBDIR += p5-WAP-wbxml
     SUBDIR += p5-XML-WBXML
@@ -152,6 +155,8 @@
     SUBDIR += py-bincopy
     SUBDIR += py-bsdconv
     SUBDIR += py-gotenberg-client
+    SUBDIR += py-mammoth
+    SUBDIR += py-markitdown
     SUBDIR += py-rencode
     SUBDIR += py-svglib
     SUBDIR += py-text-unidecode

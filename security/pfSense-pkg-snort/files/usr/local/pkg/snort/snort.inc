@@ -3,7 +3,7 @@
  * snort.inc
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2006-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2006-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2009-2010 Robert Zelaya
  * Copyright (c) 2013-2024 Bill Meeks
  * All rights reserved.
@@ -977,7 +977,7 @@ function sync_snort_package_config() {
 	snort_rules_up_install_cron(config_get_path('installedpackages/snortglobal/autorulesupdate7') != "never_up" ? true : false);
 
 	/* Do not attempt package sync if reinstalling package or booting */
-	if (!$g['snort_postinstall'] && !$g['booting'])
+	if (!$g['snort_postinstall'] && !is_platform_booting())
 		snort_sync_on_changes();
 }
 
@@ -3831,7 +3831,7 @@ function snort_sync_on_changes() {
 	global $g;
 
 	/* Do not attempt a package sync while booting up or installing package */
-	if ($g['booting'] || $g['snort_postinstall']) {
+	if (is_platform_booting() || $g['snort_postinstall']) {
 		syslog(LOG_NOTICE, "[snort] Skipping XMLRPC sync when booting up or during package reinstallation.");
 		return;
 	}
@@ -3933,7 +3933,7 @@ function snort_do_xmlrpc_sync($syncdownloadrules, $sync_to_ip, $port, $protocol,
 	global $g;
 
 	/* Do not attempt a package sync while booting up or installing package */
-	if ($g['booting'] || isset($g['snort_postinstall'])) {
+	if (is_platform_booting() || isset($g['snort_postinstall'])) {
 		syslog(LOG_NOTICE, "[snort] Skipping XMLRPC sync when booting up or during package reinstallation.");
 		return;
 	}

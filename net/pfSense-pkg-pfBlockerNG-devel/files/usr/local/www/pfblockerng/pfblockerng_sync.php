@@ -3,7 +3,7 @@
  * pfblockerng_sync.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2016-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2016-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -27,8 +27,7 @@ require_once('/usr/local/pkg/pfblockerng/pfblockerng.inc');
 global $pfb;
 pfb_global();
 
-config_init_path('installedpackages/pfblockerngsync/config/0');
-$pfb['sconfig'] = config_get_path('installedpackages/pfblockerngsync/config/0');
+$pfb['sconfig'] = config_get_path('installedpackages/pfblockerngsync/config/0', []);
 
 $pconfig = array();
 $pconfig['varsynconchanges']	= $pfb['sconfig']['varsynconchanges']	?: '';

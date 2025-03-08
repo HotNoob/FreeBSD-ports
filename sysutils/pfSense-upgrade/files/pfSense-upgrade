@@ -3,7 +3,7 @@
 # pfSense-upgrade
 #
 # part of pfSense (https://www.pfsense.org)
-# Copyright (c) 2015-2024 Rubicon Communications, LLC (Netgate)
+# Copyright (c) 2015-2025 Rubicon Communications, LLC (Netgate)
 # All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,7 @@ Usage: ${me} [-46bdfhnRUy] [-l logfile] [-p socket] [-c|-u|[-i|-d] pkg_name]
 	-n          - Dry run
 	-p socket   - Write pkg progress to socket
 	-R          - Do not reboot (this can be dangerous)
+	-T seconds  - lockf(1) timeout to wait for another instance
 	-U          - Do not update repository information
 	-y          - Assume yes as the answer to any possible interaction
 
@@ -335,7 +336,7 @@ _be_prune_guard() {
 _be_prune() {
 	_be_prune_guard && return 1
 	/sbin/bectl list -H |
-	while read _name _status _mp _space _creation; do
+	while read -r _name _status _mp _space _creation; do
 		/sbin/bectl destroy -o "${_name}" 1>/dev/null 2>&1
 	done
 	return 0
@@ -452,7 +453,7 @@ _be_remount_ds() {
 	local _dataset="${1}"
 
 	/sbin/zfs list -rH -o mountpoint,name,canmount,mounted -s mountpoint -t filesystem "${_dataset}" | \
-	while read _mp _name _canmount _mounted ; do
+	while read -r _mp _name _canmount _mounted ; do
 		# skip filesystems that must not be mounted
 		[ "$_canmount" = "off" ] && continue
 		case "$_mp" in
@@ -536,7 +537,7 @@ _be_migrate() {
 	" # END-QUOTE
 
 	# now we do the migrations...
-	echo "${_migration_table}" | while read _path _dataset; do
+	echo "${_migration_table}" | while read -r _path _dataset; do
 		# skip rows beginning with # (intended for comments as above)
 		case "$_path" in "#"*|"") continue; esac
 		_be_do_migration "${_path}" "${_dataset}"
@@ -997,15 +998,6 @@ pkg_upgrade() {
 			unlock_pkg=1
 		fi
 
-		# Before 2.4.5, pfSense-repo used to depend of pfSense-upgrade
-		# and then it is upgraded to latest version in pkg_upgrade_repo
-		# call below.  Detect when a new version is available early on
-		# old versions and make it to exit returning code 99
-		local _new_pfsense_upgrade=""
-		if [ "$(compare_pkg_version ${product}-upgrade)" != "=" ]; then
-			_new_pfsense_upgrade=1
-		fi
-
 		# If a new version of pfSense-upgrade is available, upgrade it
 		# and return a special code 99 used by wrapper to run newer
 		# version again using the same parameters
@@ -1013,12 +1005,6 @@ pkg_upgrade() {
 			_exec "pkg-static upgrade${dont_update} -f \
 			    ${product}-upgrade" "Upgrading ${product}-upgrade" \
 			    mute
-			_exit 99
-		fi
-
-		# If a new version of pfSense-upgrade was detected early and
-		# was upgraded together with pfSense-repo, exit 99
-		if [ -n "${_new_pfsense_upgrade}" ]; then
 			_exit 99
 		fi
 
@@ -1262,6 +1248,23 @@ pkg_upgrade() {
 
 		if [ -n "${NEW_MAJOR}" ]; then
 			_pkg annotate -q -M ${kernel_pkg} new_major 1
+
+			#
+			# Workaround a problem with the change of the local
+			# sqlite database path in pkg.
+			# pkg(8) needs to be updated while the network is up to
+			# update/recreate the local database.
+			# In this specific case - from 23.09 and 23.09.1 - it
+			# is safe to update the pkg before booting the new kernel.
+			# See #15964.
+			#
+			if [ "$(_pkg query %v "${product}" | \
+			    /usr/bin/grep -c "23.09")" = "1" ] && \
+			    [ "$(compare_pkg_version pkg)" = "<" ]; then
+				pkg_unlock pkg
+				_exec "pkg-static upgrade${dont_update} pkg" \
+				    "Upgrading pkg" mute
+			fi
 		fi
 
 		_pkg annotate -q -M ${kernel_pkg} next_stage 2
@@ -1338,6 +1341,12 @@ pkg_upgrade() {
 			_exec "pkg-static upgrade${dont_update}${_force} -r ${product}" \
 			    "Upgrading necessary packages"
 			delete_annotation=""
+
+			# Upgrade drm if it is in use
+			if kldstat -qm i915kms; then
+				_exec "pkg-static upgrade -r ${product} -f drm-\*" \
+				    "Upgrading drm"
+			fi
 
 			# Make sure PHP setup is fine
 			_exec "/etc/rc.d/ldconfig onestart" \
@@ -1456,7 +1465,7 @@ get_meta_pkg_name() {
 	elif is_pkg_installed ${product}-php72; then
 		echo "${product}-php72"
 	elif is_pkg_installed ${product}; then
-		echo "${product}"
+		echo "${product}-system"
 	else
 		_echo -o stderr "ERROR: It was not possible to identify which" \
 		    "${product} meta package is installed"
@@ -1534,7 +1543,7 @@ check_upgrade() {
 					_repopath="${_db_dir}/${_reponame}"
 					# Skip the development builds.
 					if [ "${_rel_sup}" = "1" ] && \
-					    [ "$_is_configured_repo}" = "0" ] && \
+					    [ "${_is_configured_repo}" = "0" ] && \
 					    [ ! -f "${_reporel}" ]; then
 						continue
 					fi
@@ -1589,7 +1598,7 @@ check_upgrade() {
 					_version_compare=$(compare_pkg_version "${_package}" "${_new_version}")
 				fi
 				if [ "${_version_compare}" == "<" ]; then
-					_new_version=$(_pkg ${_pkg_args} rquery -U %v ${_package})
+					_new_version="$(_pkg ${_pkg_args} rquery -U %v ${_package} | /usr/bin/cut -f -5 -d.)"
 				fi
 			done
 		done
@@ -1622,7 +1631,7 @@ check_upgrade() {
 					;;
 			esac
 
-		    _new_version=$(_pkg rquery -U %v ${_package})
+			_new_version="$(_pkg ${_pkg} rquery -U %v ${_package} | /usr/bin/cut -f -5 -d.)"
 			if [ -z "${_mute}" ]; then
 				_echo "${_new_version} version of ${product} is available"
 			fi
@@ -1895,11 +1904,12 @@ unset force
 unset yes
 unset progress_file
 unset progress_socket
+unset lockf_timeout
 unset action
 unset action_pkg
 unset force_ipv4
 unset force_ipv6
-while getopts 46b:cCdfi:hp:l:nr:RuUy opt; do
+while getopts 46b:cCdfi:hp:l:nr:RT:uUy opt; do
 	case ${opt} in
 		4)
 			if [ -n "${force_ipv6}" ]; then
@@ -1969,6 +1979,10 @@ while getopts 46b:cCdfi:hp:l:nr:RuUy opt; do
 			;;
 		R)
 			dont_reboot=1
+			;;
+		T)
+			# Handled in the wrapper, not used here.
+			lockf_timeout="$(printf "%d" "${OPTARG}" 2> /dev/null)"
 			;;
 		u)
 			if [ -n "${action}" ]; then

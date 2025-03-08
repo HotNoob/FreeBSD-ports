@@ -2,7 +2,7 @@
  * pfsense.c
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2004-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2004-2025 Rubicon Communications, LLC (Netgate)
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -523,9 +523,6 @@ PHP_FUNCTION(pfSense_kill_states)
 		goto cleanup1;
 	}
 
-	/* Also match on the pre-NAT address. Redmine #11556 */
-	k.nat = true;
-
 	for (resp[0] = res[0]; resp[0]; resp[0] = resp[0]->ai_next) {
 		if (resp[0]->ai_addr == NULL)
 			continue;
@@ -587,12 +584,21 @@ PHP_FUNCTION(pfSense_kill_states)
 					php_printf("Unknown address family %d", k.af);
 					continue;
 				}
-
+				k.nat = false;
+				if (pfctl_kill_states(dev, &k, &kcount))
+					php_printf("Could not kill states\n");
+				k.nat = true;
 				if (pfctl_kill_states(dev, &k, &kcount))
 					php_printf("Could not kill states\n");
 			}
 			freeaddrinfo(res[1]);
 		} else {
+			k.nat = false;
+			if (pfctl_kill_states(dev, &k, &kcount)) {
+				php_printf("Could not kill states\n");
+				break;
+			}
+			k.nat = true;
 			if (pfctl_kill_states(dev, &k, &kcount)) {
 				php_printf("Could not kill states\n");
 				break;
@@ -1585,9 +1591,6 @@ fill_interface_params(zval *val, struct ifaddrs *mb)
 			break;
 		case IFT_TUNNEL:
 		case IFT_GIF:
-#if (__FreeBSD_version < 1100000)
-		case IFT_FAITH:
-#endif
 		case IFT_ENC:
 		case IFT_PFLOG:
 		case IFT_PFSYNC:
@@ -1812,8 +1815,7 @@ PHP_FUNCTION(pfSense_get_ifaddrs)
 			bzero(outputbuf, sizeof outputbuf);
 			tmp6 = (struct sockaddr_in6 *)mb->ifa_addr;
 			if (IN6_IS_ADDR_LINKLOCAL(&tmp6->sin6_addr)) {
-				zval_ptr_dtor(&addr);
-				break;
+				add_assoc_long(&addr, "linklocal", 1);
 			}
 			inet_ntop(AF_INET6, (void *)&tmp6->sin6_addr, outputbuf,
 			    sizeof(outputbuf));
@@ -1826,8 +1828,22 @@ PHP_FUNCTION(pfSense_get_ifaddrs)
 			if (ioctl(PFSENSE_G(inets6),
 			    SIOCGIFAFLAG_IN6, &ifr6) == 0) {
 				llflag = ifr6.ifr_ifru.ifru_flags6;
+				if ((llflag & IN6_IFF_ANYCAST) != 0)
+					add_assoc_long(&addr, "anycast", 1);
 				if ((llflag & IN6_IFF_TENTATIVE) != 0)
 					add_assoc_long(&addr, "tentative", 1);
+				if ((llflag & IN6_IFF_DUPLICATED) != 0)
+					add_assoc_long(&addr, "duplicated", 1);
+				if ((llflag & IN6_IFF_DETACHED) != 0)
+					add_assoc_long(&addr, "detached", 1);
+				if ((llflag & IN6_IFF_DEPRECATED) != 0)
+					add_assoc_long(&addr, "deprecated", 1);
+				if ((llflag & IN6_IFF_AUTOCONF) != 0)
+					add_assoc_long(&addr, "autoconf", 1);
+				if ((llflag & IN6_IFF_TEMPORARY) != 0)
+					add_assoc_long(&addr, "temporary", 1);
+				if ((llflag & IN6_IFF_PREFER_SOURCE) != 0)
+					add_assoc_long(&addr, "prefer_source", 1);
 			}
 
 			tmp6 = (struct sockaddr_in6 *)mb->ifa_netmask;
@@ -2709,7 +2725,6 @@ pfSense_append_state(struct pfctl_state *s, void *arg) {
 	struct protoent *p;
 	struct pfSense_state_arg *a = (struct pfSense_state_arg *)arg;
 	int found, min, sec;
-	sa_family_t af;
 	uint8_t proto;
 	uint32_t expire, creation;
 	uint64_t bytes[2], id, packets[2];
@@ -2755,7 +2770,6 @@ pfSense_append_state(struct pfctl_state *s, void *arg) {
 			return (0);
 	}
 
-	af = s->key[PF_SK_WIRE].af;
 	proto = s->key[PF_SK_WIRE].proto;
 	if (s->direction == PF_OUT) {
 		src = &s->src;
@@ -2790,15 +2804,15 @@ pfSense_append_state(struct pfctl_state *s, void *arg) {
 	    ((s->direction == PF_OUT) ? "out" : "in"));
 
 	memset(buf, 0, sizeof(buf));
-	pf_print_host(&nk->addr[1], nk->port[1], af, buf, sizeof(buf));
+	pf_print_host(&nk->addr[1], nk->port[1], nk->af, buf, sizeof(buf));
 	add_assoc_string(&array, ((s->direction == PF_OUT) ? "src" : "dst"), buf);
 	if (a->filter != NULL && !found && strstr(buf, a->filter))
 		found = 1;
 
-	if (PF_ANEQ(&nk->addr[1], &sk->addr[1], af) ||
+	if (nk->af != sk->af || PF_ANEQ(&nk->addr[1], &sk->addr[1], nk->af) ||
 	    nk->port[1] != sk->port[1]) {
 		memset(buf, 0, sizeof(buf));
-		pf_print_host(&sk->addr[1], sk->port[1], af, buf,
+		pf_print_host(&sk->addr[1], sk->port[1], sk->af, buf,
 		    sizeof(buf));
 		add_assoc_string(&array,
 		    ((s->direction == PF_OUT) ? "src-orig" : "dst-orig"), buf);
@@ -2807,15 +2821,15 @@ pfSense_append_state(struct pfctl_state *s, void *arg) {
 	}
 
 	memset(buf, 0, sizeof(buf));
-	pf_print_host(&nk->addr[0], nk->port[0], af, buf, sizeof(buf));
+	pf_print_host(&nk->addr[0], nk->port[0], nk->af, buf, sizeof(buf));
 	add_assoc_string(&array, ((s->direction == PF_OUT) ? "dst" : "src"), buf);
 	if (a->filter != NULL && !found && strstr(buf, a->filter))
 		found = 1;
 
-	if (PF_ANEQ(&nk->addr[0], &sk->addr[0], af) ||
+	if (nk->af != sk->af || PF_ANEQ(&nk->addr[0], &sk->addr[0], nk->af) ||
 	    nk->port[0] != sk->port[0]) {
 		memset(buf, 0, sizeof(buf));
-		pf_print_host(&sk->addr[0], sk->port[0], af, buf,
+		pf_print_host(&sk->addr[0], sk->port[0], sk->af, buf,
 		    sizeof(buf));
 		add_assoc_string(&array,
 		    ((s->direction == PF_OUT) ? "dst-orig" : "src-orig"), buf);

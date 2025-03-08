@@ -4,7 +4,7 @@
  *
  * part of pfSense (https://www.pfsense.org)
  * Copyright (c) 2021 R. Christian McDonald (https://github.com/rcmcdonald91)
- * Copyright (c) 2022-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2022-2025 Rubicon Communications, LLC (Netgate)
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
@@ -114,7 +114,7 @@ $wgg = array(
 	'default_port'				=> 51820,
 	'default_resolve_interval'		=> 300,
 	'default_widget_activity_threshold'	=> 120,
-	'default_widget_refresh_interval'	=> 1,
+	'default_widget_refresh_interval'	=> 20,
 	'max_port'				=> 65535,
 	'max_tunnels'				=> 32768
 );
@@ -206,7 +206,7 @@ function wg_globals() {
 	global $wgg;
 
 	// Reload config.xml to get any recent changes
-	config_read_file(true);
+	config_read_file(false, true);
 }
 
 // Call this often to read the latest configuration information

@@ -1,5 +1,5 @@
 PORTNAME=	iaito
-DISTVERSION=	5.9.2
+DISTVERSION=	5.9.9
 CATEGORIES=	devel
 
 MAINTAINER=	freebsd@sysctl.cz
@@ -13,8 +13,8 @@ BROKEN_i386=	error: non-constant-expression cannot be narrowed from type 'const 
 LIB_DEPENDS=	libcapstone.so:devel/capstone \
 		libr_core.so:devel/radare2
 
-FLAVORS=		qt5 qt6
-FLAVOR?=		${FLAVORS:[2]}
+FLAVORS=		qt6 qt5
+FLAVOR?=		qt6
 qt5_PKGNAMESUFFIX=	-qt5
 qt6_PKGNAMESUFFIX=	-qt6
 

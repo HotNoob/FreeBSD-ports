@@ -18,8 +18,8 @@ CONFLICTS=	nut-[0-9]*
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	networkupstools
-GH_TAGNAME=	0f7d5cfaa 
-NUT_COMMIT_DATE=	2024.09.02
+GH_TAGNAME=	e718a1e7e
+NUT_COMMIT_DATE=	2024.12.14
 
 MAKE_JOBS_UNSAFE=	yes
 GNU_CONFIGURE=	yes
@@ -86,7 +86,8 @@ CONFIGURE_ARGS=	--sysconfdir=${PREFIX}/etc/nut \
 		--without-python2 \
 		--with-python3=${PYTHON_CMD} \
 		--without-nut_monitor \
-		--with-ltdl --with-nut-scanner
+		--with-ltdl --with-nut-scanner \
+		--without-augeas-lenses-dir
 
 GNU_CONFIGURE_MANPREFIX=${PREFIX}/share
 
@@ -168,8 +169,10 @@ post-install:
 .endif
 .if ${PORT_OPTIONS:MDOCS}
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}/cables
+	@${MKDIR} ${STAGEDIR}${DOCSDIR}/man
 	${INSTALL_DATA} ${WRKSRC}/docs/cables/*.txt ${STAGEDIR}${DOCSDIR}/cables
 	${INSTALL_DATA} ${WRKSRC}/docs/*.txt ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${WRKSRC}/docs/man/*.txt ${STAGEDIR}${DOCSDIR}/man
 	${INSTALL_DATA} ${WRKSRC}/docs/FAQ.txt ${STAGEDIR}${DOCSDIR}
 .for file in AUTHORS COPYING INSTALL MAINTAINERS NEWS README
 	${INSTALL_DATA} ${WRKSRC}/${file} ${STAGEDIR}${DOCSDIR}

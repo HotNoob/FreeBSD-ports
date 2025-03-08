@@ -3,7 +3,7 @@
  * haproxy_pool_edit.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2009-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2009-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2013-2015 PiBa-NL
  * Copyright (c) 2008 Remco Hoef <remcoverhoef@pfsense.com>
  * All rights reserved.
@@ -408,7 +408,7 @@ if ($_POST) {
 		$input_errors[] = "The field 'Stats Node' contains invalid characters. Should be a string with digits(0-9), letters(A-Z, a-z), hyphen(-) or underscode(_)";
 	}
 	/* Ensure that our pool names are unique */
-	$a_backends = config_get_path('installedpackages/haproxy/ha_pools/item');
+	$a_backends = config_get_path('installedpackages/haproxy/ha_pools/item', []);
 	for ($i=0; isset($a_backends[$i]); $i++) {
 		if (($_POST['name'] == $a_backends[$i]['name']) && ($i != $id)) {
 			$input_errors[] = "This pool name has already been used.  Pool names must be unique.";

@@ -3,7 +3,7 @@
  * squidguard.inc
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2015-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2015-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2006-2011 Serg Dvoriancev
  * Copyright (c) 2013 Alexander Wilke <nachtfalkeaw@web.de>
  * Copyright (c) 2013 Marcello Coutinho
@@ -1148,6 +1148,7 @@ function convert_pfxml_to_sgxml_rewrite($pfconfig) {
         $sgx[F_NAME]        = $pfx['name'];
         $sgx[F_DESCRIPTION] = $pfx['description'];
         $sgx[F_LOG]         = $pfx[F_ENABLELOG];
+        $sgx[F_ITEM] = array();
 
         if (is_array($pfx['row'])) {
             foreach($pfx['row'] as $pfx_row) {
@@ -1159,7 +1160,6 @@ function convert_pfxml_to_sgxml_rewrite($pfconfig) {
                 if (strpos($pfx_row[F_MODE], 'nocase') !== false) $mode .= 'i';
                 if (strpos($pfx_row[F_MODE], 'redirect') !== false) $mode .= 'r';
                 $sgx_row[F_MODE] = $mode; # ! sys options only  - not for GUI !
-                $sgx[F_ITEM] = array();
                 $sgx[F_ITEM][] = $sgx_row;
              }
         }

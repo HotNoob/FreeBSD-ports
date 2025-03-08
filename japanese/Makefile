@@ -14,6 +14,7 @@
     SUBDIR += alias-fonts
     SUBDIR += another-htmllint
     SUBDIR += anthy
+    SUBDIR += anthy-unicode
     SUBDIR += aobook
     SUBDIR += bible_names-fpw
     SUBDIR += boiled-mozc
@@ -147,6 +148,7 @@
     SUBDIR += jvim3
     SUBDIR += kakasi
     SUBDIR += kasumi
+    SUBDIR += kasumi-unicode
     SUBDIR += kbanner
     SUBDIR += kcc
     SUBDIR += kcode
@@ -196,7 +198,6 @@
     SUBDIR += ng-devel
     SUBDIR += ngraph-fonts
     SUBDIR += nkf
-    SUBDIR += onew
     SUBDIR += p5-2chproxy
     SUBDIR += p5-Date-Japanese-Era
     SUBDIR += p5-Date-Japanese-Holiday
@@ -228,7 +229,7 @@
     SUBDIR += pejv-fpw
     SUBDIR += plain2
     SUBDIR += plan
-    SUBDIR += prn
+    SUBDIR += prn-ps
     SUBDIR += py-SudachiPy
     SUBDIR += py-fugashi
     SUBDIR += py-ipadic

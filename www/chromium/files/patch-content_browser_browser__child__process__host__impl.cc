@@ -1,7 +1,7 @@
---- content/browser/browser_child_process_host_impl.cc.orig	2024-08-26 12:06:38 UTC
+--- content/browser/browser_child_process_host_impl.cc.orig	2025-02-19 07:43:18 UTC
 +++ content/browser/browser_child_process_host_impl.cc
-@@ -324,6 +324,7 @@ void BrowserChildProcessHostImpl::LaunchWithoutExtraCo
-       switches::kMojoCoreLibraryPath,
+@@ -326,6 +326,7 @@ void BrowserChildProcessHostImpl::LaunchWithoutExtraCo
+       switches::kLogBestEffortTasks,
        switches::kPerfettoDisableInterning,
        switches::kTraceToConsole,
 +      switches::kDisableUnveil,

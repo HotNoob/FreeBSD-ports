@@ -3,7 +3,7 @@
  * pfblockerng_blacklist.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2016-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2016-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -89,8 +89,7 @@ if (!empty($blacklist_types)) {
 	}
 }
 
-config_init_path('installedpackages/pfblockerngblacklist');
-$pfb['bconfig']	= config_get_path('installedpackages/pfblockerngblacklist');
+$pfb['bconfig']	= config_get_path('installedpackages/pfblockerngblacklist', []);
 
 $pconfig = array();
 $pconfig['blacklist_enable']		= $pfb['bconfig']['blacklist_enable']				?: 'Disable';

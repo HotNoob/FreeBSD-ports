@@ -52,6 +52,7 @@
     SUBDIR += clifm
     SUBDIR += cloc
     SUBDIR += clpbar
+    SUBDIR += code2prompt
     SUBDIR += colortail
     SUBDIR += coloursum
     SUBDIR += colwide
@@ -95,7 +96,6 @@
     SUBDIR += dtach
     SUBDIR += dvorak7min
     SUBDIR += dynomite
-    SUBDIR += e2fsprogs-libblkid
     SUBDIR += e2fsprogs-libuuid
     SUBDIR += ecflow
     SUBDIR += edfbrowser
@@ -168,7 +168,6 @@
     SUBDIR += gnome-mime-data
     SUBDIR += gnome-user-docs
     SUBDIR += gnu-watch
-    SUBDIR += gnuls
     SUBDIR += gobuster
     SUBDIR += gollama
     SUBDIR += gone
@@ -276,7 +275,6 @@
     SUBDIR += mmv
     SUBDIR += mnn
     SUBDIR += molequeue
-    SUBDIR += morse
     SUBDIR += mtx
     SUBDIR += mxnet
     SUBDIR += najitool
@@ -294,6 +292,7 @@
     SUBDIR += ompl
     SUBDIR += ondir
     SUBDIR += onnx
+    SUBDIR += onnxruntime
     SUBDIR += ooo
     SUBDIR += opencyc
     SUBDIR += openhab
@@ -458,6 +457,7 @@
     SUBDIR += py-llm-claude-3
     SUBDIR += py-log_symbols
     SUBDIR += py-mffpy
+    SUBDIR += py-mixpanel
     SUBDIR += py-mmcv
     SUBDIR += py-mmdet
     SUBDIR += py-mmengine
@@ -484,10 +484,12 @@
     SUBDIR += py-oterm
     SUBDIR += py-palettable
     SUBDIR += py-papermill
+    SUBDIR += py-pdd
     SUBDIR += py-pexpect
     SUBDIR += py-pkbar
     SUBDIR += py-placekey
     SUBDIR += py-polars
+    SUBDIR += py-posthog
     SUBDIR += py-powerline-status
     SUBDIR += py-progressbar
     SUBDIR += py-progressbar2
@@ -552,7 +554,6 @@
     SUBDIR += quary
     SUBDIR += randomx
     SUBDIR += raspberrypi-gpioshutdown
-    SUBDIR += raspberrypi-userland
     SUBDIR += raspbsd-led
     SUBDIR += ree
     SUBDIR += retry
@@ -568,7 +569,6 @@
     SUBDIR += rubygem-dotenv-rails-rails4
     SUBDIR += rubygem-dotenv-rails-rails5
     SUBDIR += rubygem-dotenv-rails-rails50
-    SUBDIR += rubygem-dotenv-rails-rails61
     SUBDIR += rubygem-dotenv2
     SUBDIR += rubygem-haversine_distance
     SUBDIR += rubygem-iesd
@@ -634,8 +634,6 @@
     SUBDIR += tvbrowser
     SUBDIR += tvm
     SUBDIR += tzdiff
-    SUBDIR += uk-phone
-    SUBDIR += uk-postcodes
     SUBDIR += umodunpack
     SUBDIR += unclutter
     SUBDIR += unclutter-xfixes

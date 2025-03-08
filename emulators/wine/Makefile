@@ -1,9 +1,8 @@
 PORTNAME=	wine
-DISTVERSION=	9.0
-PORTREVISION=	5
+DISTVERSION=	10.0
 PORTEPOCH=	1
 CATEGORIES=	emulators
-MASTER_SITES=	https://dl.winehq.org/wine/source/9.0/
+MASTER_SITES=	https://dl.winehq.org/wine/source/10.0/
 
 MAINTAINER=	gerald@FreeBSD.org
 COMMENT=	Microsoft Windows compatibility environment
@@ -42,6 +41,7 @@ CONFIGURE_ARGS+=--verbose \
 		--without-krb5 \
 		--with-mingw CROSSCC="clang" \
 		--without-netapi \
+		--without-odbc \
 		--without-opencl \
 		--without-osmesa \
 		--without-pcap \
@@ -67,6 +67,8 @@ BINARY_ALIAS+=	clang=${LOCALBASE}/bin/clang${LLVM_VERSION} \
 
 SUB_FILES=	pkg-message
 
+PIE_UNSAFE=	yes
+
 PORTDATA=	wine.inf
 
 OPTIONS_DEFINE=	CUPS DOCS DOSBOX GNUTLS V4L WINEMAKER X11 GECKO MONO
@@ -80,7 +82,7 @@ WINEMAKER_DESC=	Fully support winemaker (requires Perl)
 GECKO_DESC=	Bundle Gecko MSI package for Wine
 MONO_DESC=	Bundle Mono MSI package for Wine
 
-PORTSCOUT=	limit:^8\.0
+PORTSCOUT=	limit:^9\.0
 
 ALSA_CONFIGURE_WITH=	alsa
 ALSA_USES=		gnome gstreamer

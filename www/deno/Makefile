@@ -1,6 +1,6 @@
 PORTNAME=	deno
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.46.2
+DISTVERSION=	2.1.4
 PORTREVISION=	1
 CATEGORIES=	www
 
@@ -26,7 +26,7 @@ GH_ACCOUNT=	denoland
 
 USE_GNOME=	glib20
 
-V8_VERS=	0.105.0
+V8_VERS=	130.0.1
 
 CARGO_ENV+=	CLANG_BASE_PATH=/usr \
 		GN=${PREFIX}/bin/gn \
@@ -58,9 +58,9 @@ post-patch:
 	${MKDIR} ${WRKSRC}/cargo-crates/v8-${V8_VERS}/v8/tools/builtins-pgo/x64.profile
 
 	${MKDIR} ${WRKSRC}/cargo-crates/v8-${V8_VERS}/third_party/icu/common
-	${CP} ${WRKSRC}/cargo-crates/deno_core_icudata-0.0.73/src/icudtl.dat ${WRKSRC}/cargo-crates/v8-${V8_VERS}/third_party/icu/common/
+	${CP} ${WRKSRC}/cargo-crates/deno_core_icudata-0.74.0/src/icudtl.dat ${WRKSRC}/cargo-crates/v8-${V8_VERS}/third_party/icu/common/
 
 do-install:
-	${INSTALL_PROGRAM} ${CARGO_TARGET_DIR}/${CARGO_BUILD_TARGET}/*/deno ${STAGEDIR}${LOCALBASE}/bin
+	${INSTALL_PROGRAM} ${CARGO_TARGET_DIR}/*/deno ${STAGEDIR}${LOCALBASE}/bin
 
 .include <bsd.port.mk>

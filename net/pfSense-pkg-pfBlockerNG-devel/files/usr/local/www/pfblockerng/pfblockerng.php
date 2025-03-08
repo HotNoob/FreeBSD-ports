@@ -3,7 +3,7 @@
  * pfblockerng.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2015-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2015-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -200,7 +200,7 @@ if (in_array($argv[1], array('update', 'updateip', 'updatednsbl', 'dc', 'dcc', '
 				}
 
 				// Skip ASN update, if disabled or Token not defined
-				if ($pfb['asn_reporting'] == 'disabled' || empty($pfb['asn_token'])) {
+				if (empty($pfb['asn_token'])) {
 					unset($pfb['extras'][3], $pfb['extras'][4]);
 				}
 			}
@@ -241,7 +241,7 @@ if (in_array($argv[1], array('update', 'updateip', 'updatednsbl', 'dc', 'dcc', '
 		case 'asn':		// Update ASN database only
 		case 'asn_shell':
 			// Skip ASN update, if disabled or Token not defined
-			if ($pfb['asn_reporting'] == 'disabled' || empty($pfb['asn_token'])) {
+			if (empty($pfb['asn_token'])) {
 				$asn_log = "\n  ASN Token not defined. Terminating Download. ";
 				if ($argv[1] == 'asn') {
 					pfb_logger($asn_log, 2);
@@ -1053,7 +1053,9 @@ function pfblockerng_uc_countries() {
 	}
 
 	// Add Continents to GeoIP ISOs for IPv4/6 Source Field lookup
-	@file_put_contents("{$pfb['geoip_isos']}", 'Africa,Antarctica,Asia,Europe,North_America,Oceania,South_America,Proxy_and_Satellite', FILE_APPEND | LOCK_EX);
+	$add_continents = 'Africa [Continent],Antarctica [Continent],Asia [Continent],Europe [Continent],North_America [Continent],Oceania [Continent]';
+	$add_continents .= ',South_America [Continent],Proxy_and_Satellite [GeoIP]';
+	@file_put_contents("{$pfb['geoip_isos']}", "{$add_continents}", FILE_APPEND | LOCK_EX);
 
 	ksort($pfb_geoip['country'], SORT_NATURAL);
 
@@ -1479,7 +1481,7 @@ $php_data = <<<EOF
  * pfblockerng_{$continent_en}.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2016-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2016-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -1505,10 +1507,10 @@ pfb_global();
 
 \$continent			= "{$continent}";	// Continent name (Locale specific)
 \$continent_en			= "{$continent_en}";	// Continent name (English)
-\$options_countries4		= array(${'options4'});
-\$options_countries6		= array(${'options6'});
-\$options_countries4_cnt	= "${'ftotal4'}";
-\$options_countries6_cnt	= "${'ftotal6'}";
+\$options_countries4		= array({$options4});
+\$options_countries6		= array({$options6});
+\$options_countries4_cnt	= "{$ftotal4}";
+\$options_countries6_cnt	= "{$ftotal6}";
 
 EOF;
 $php_data .= <<<'EOF'
@@ -1546,8 +1548,7 @@ $options_agateway_in		= $options_agateway_out		= pfb_get_gateways();
 $continent_display		= str_replace('_', ' ', "{$continent}");				// Continent name displayed on page
 $conf_type			= 'pfblockerng' . strtolower(str_replace('_', '', $continent_en));	// XML config location
 
-config_init_path("installedpackages/{$conf_type}/config/0");
-$pfb['geoipconfig'] = config_get_path("installedpackages/{$conf_type}/config/0");
+$pfb['geoipconfig'] = config_get_path("installedpackages/{$conf_type}/config/0", []);
 
 $active[$continent_display]	= TRUE;
 
@@ -1706,7 +1707,7 @@ if ($_POST) {
 			$pfb['geoipconfig']['autoproto_out']		= $_POST['autoproto_out']				?: '';
 			$pfb['geoipconfig']['agateway_out']		= $_POST['agateway_out']				?: '';
 
-			config_set_path('installedpackages/{$conf_type}/config/0', $pfb['geoipconfig']);
+			config_set_path("installedpackages/{$conf_type}/config/0", $pfb['geoipconfig']);
 			write_config("[pfBlockerNG] save GeoIP [ {$continent_display} ] settings");
 			header("Location: /pfblockerng/pfblockerng_{$continent_en}.php");
 			exit;
@@ -2079,7 +2080,7 @@ function pfb_build_reputation_tab($et_options='') {
  * pfblockerng_reputation.php
  *
  * part of pfSense (https://www.pfsense.org)
- * Copyright (c) 2016-2024 Rubicon Communications, LLC (Netgate)
+ * Copyright (c) 2016-2025 Rubicon Communications, LLC (Netgate)
  * Copyright (c) 2015-2024 BBcan177@gmail.com
  * All rights reserved.
  *
@@ -2103,8 +2104,7 @@ require_once('/usr/local/pkg/pfblockerng/pfblockerng.inc');
 global $pfb;
 pfb_global();
 
-config_init_path('installedpackages/pfblockerngreputation/config/0');
-$pfb['repconfig'] = config_get_path('installedpackages/pfblockerngreputation/config/0');
+$pfb['repconfig'] = config_get_path('installedpackages/pfblockerngreputation/config/0', []);
 
 $pconfig = array();
 $pconfig['enable_rep']		= $pfb['repconfig']['enable_rep'];

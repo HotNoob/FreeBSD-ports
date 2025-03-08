@@ -1,5 +1,6 @@
 PORTNAME=	libnest2d-ultimaker
 DISTVERSION=	5.3.0
+PORTREVISION=	3
 CATEGORIES=	devel
 
 MAINTAINER=	db@FreeBSD.org

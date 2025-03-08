@@ -1,6 +1,6 @@
 PORTNAME=	c-lightning
 # To build from an arbitrary git commit comment PORTVERSION and PORTREVISION (if present)
-PORTVERSION=	24.08
+PORTVERSION=	24.11.1
 DISTVERSIONPREFIX=	v
 # and uncomment the following two lines (use for example -git-HEAD or -git-f8d8348c)
 #PORTVERSION=	0
@@ -14,6 +14,7 @@ WWW=		https://github.com/ElementsProject/lightning
 LICENSE=	MIT
 
 BUILD_DEPENDS=	bash:shells/bash \
+		gsed:textproc/gsed \
 		lowdown:textproc/lowdown \
 		jq:textproc/jq \
 		${PYTHON_PKGNAMEPREFIX}mako>=1.0.14:textproc/py-mako@${PY_FLAVOR} \
@@ -29,7 +30,7 @@ USES=		autoreconf:build \
 		libtool \
 		shebangfix
 CPE_VENDOR=	elementsproject
-BINARY_ALIAS=	python=${PYTHON_CMD} python3=${PYTHON_CMD}
+BINARY_ALIAS=	python=${PYTHON_CMD} python3=${PYTHON_CMD} sed=${LOCALBASE}/bin/gsed
 ALL_TARGET=	default
 SHEBANG_FILES=	plugins/wss-proxy/wss-proxy.py \
 		plugins/clnrest/clnrest.py \
@@ -157,8 +158,9 @@ PLIST_SUB=	U="${USERS}" G="${GROUPS}"
 
 .include <bsd.port.pre.mk>
 
-.if ${OPSYS} == FreeBSD && ( ${OSVERSION} >= 1400079 || ( ${OSVERSION} >= 1302505 && ${OSVERSION} < 1400000 ))
-CPPFLAGS+=	-Wno-error=unused-but-set-variable
+.if ${OPSYS} == FreeBSD
+CPPFLAGS+=	-Wno-error=gnu-folding-constant \
+		-Wno-error=unused-but-set-variable
 .endif
 
 post-patch:

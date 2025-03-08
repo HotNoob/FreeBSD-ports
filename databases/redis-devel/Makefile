@@ -1,5 +1,5 @@
 PORTNAME=	redis
-DISTVERSION=	7.4.0.20240911
+DISTVERSION=	7.4.2.20250201
 CATEGORIES=	databases
 PKGNAMESUFFIX=	-devel
 
@@ -18,15 +18,16 @@ LICENSE_PERMS_SSPLv1=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 USES+=		compiler:c11 cpe gmake tcl:test
 CPE_VENDOR=	redislabs
 USE_GITHUB=	yes
-GH_TAGNAME=	2dd4cca36
+GH_TAGNAME=	e3b9397df
 USE_RC_SUBR=	redis sentinel
 
 MAKE_ENV=	OPTIMIZATION= \
 		V=yo
 
+CFLAGS+=	-Wno-deprecated-declarations
 LDFLAGS+=	-lpthread -lm -lexecinfo
 
-CONFLICTS_INSTALL=	redis redis62 redis70 redis72 # etc/rc.d/redis
+CONFLICTS_INSTALL=	redis redis62 redis72
 
 PORTSCOUT=	ignore:1
 SUB_FILES=	pkg-message
@@ -64,7 +65,7 @@ REDIS_RUNDIR?=	/var/run/redis
 REDIS_LOGDIR?=	/var/log/redis
 
 post-patch-JEMALLOC-on:
-	@${REINPLACE_CMD} '72s!Linux!FreeBSD!g' ${WRKSRC}/src/Makefile
+	@${REINPLACE_CMD} '78s!Linux!FreeBSD!g' ${WRKSRC}/src/Makefile
 
 post-build:
 	${SED} ${SUB_LIST:S/$/!g/:S/^/ -e s!%%/:S/=/%%!/} \

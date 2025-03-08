@@ -1,6 +1,6 @@
---- chrome/common/chrome_switches.h.orig	2024-08-26 14:40:28 UTC
+--- chrome/common/chrome_switches.h.orig	2024-11-16 12:20:41 UTC
 +++ chrome/common/chrome_switches.h
-@@ -279,12 +279,12 @@ extern const char kAllowNaClSocketAPI[];
+@@ -277,13 +277,13 @@ extern const char kAllowNaClSocketAPI[];
  #endif
  
  #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_MAC) || \
@@ -8,6 +8,7 @@
 +    BUILDFLAG(IS_WIN) || BUILDFLAG(IS_BSD)
  extern const char kEnableNewAppMenuIcon[];
  extern const char kGuest[];
+ extern const char kForceNtpMobilePromo[];
  #endif
  
 -#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_WIN)
